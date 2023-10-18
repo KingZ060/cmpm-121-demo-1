@@ -59,12 +59,10 @@ requestAnimationFrame(updateCounter);
 
 //Step 5
 function updatePurchaseButtonState() {
-  purchaseButton.disabled =
-    counter < countCurrentPrice(button1Count, item1Price);
-  purchaseButton2.disabled =
-    counter < countCurrentPrice(button2Count, item2Price);
-  purchaseButton3.disabled =
-    counter < countCurrentPrice(button3Count, item3Price);
+  availableItems.forEach((item, index) => {
+    const currentPrice = countCurrentPrice(item.count, item.initPrice);
+    purchaseButtons[index].disabled = counter < currentPrice;
+  });
 }
 const rateTxt = document.createElement("h2");
 rateTxt.innerHTML = `Growth rate: ${growthRate.toFixed(2)} 🪙/sec`;
@@ -124,65 +122,131 @@ function countCurrentPrice(count: number, price: number): number {
   return price * Math.pow(1.15, count);
 }
 
-const item1Price = 10;
-let button1Count: number = 0;
-const purchaseButton = document.createElement("button");
-purchaseButton.innerHTML = `Open a bank Account<br>Account opened: ${button1Count}, Cost: ${item1Price}🪙, Gain: 0.1🪙/sec<br>You have saved some money, let's get some interest!`;
-purchaseButton.disabled = true;
-function updatePurchaseButton() {
-  let currentPrice = countCurrentPrice(button1Count, item1Price);
-  if (counter >= currentPrice) {
-    counter -= currentPrice;
-    growthRate += 0.1;
-    button1Count += 1;
-    rateTxt.innerHTML = `Growth rate: ${growthRate.toFixed(2)} 🪙/sec`;
-  }
-  currentPrice = countCurrentPrice(button1Count, item1Price);
-  purchaseButton.innerHTML = `Open a bank Account<br>Account opened: ${button1Count}, Cost: ${currentPrice.toFixed(
-    2,
-  )}🪙, Gain: 0.1🪙/sec<br>You have saved some money, let's get some interest!`;
+//Step 9
+interface Item {
+  name: string;
+  img: string;
+  description: string;
+  initPrice: number;
+  rate: number;
+  count: number;
 }
-app.append(purchaseButton);
-purchaseButton.addEventListener("click", updatePurchaseButton);
 
-const item2Price = 100;
-let button2Count: number = 0;
-const purchaseButton2 = document.createElement("button");
-purchaseButton2.innerHTML = `Upgrade to a "Gold Account"<br>Account opened: ${button2Count}, Cost: ${item2Price}🪙, Gain: 5🪙/sec<br>A higher level account for more interest!`;
-purchaseButton2.disabled = true;
-function updatePurchaseButton2() {
-  let currentPrice = countCurrentPrice(button2Count, item2Price);
-  if (counter >= currentPrice) {
-    counter -= currentPrice;
-    growthRate += 5;
-    button2Count += 1;
-    rateTxt.innerHTML = `Growth rate: ${growthRate.toFixed(2)} 🪙/sec`;
-  }
-  currentPrice = countCurrentPrice(button2Count, item2Price);
-  purchaseButton2.innerHTML = `Upgrade to a "Gold Account"<br>Account opened: ${button2Count}, Cost: ${currentPrice.toFixed(
-    2,
-  )}🪙, Gain: 5🪙/sec<br>A higher level account for more interest!`;
-}
-app.append(purchaseButton2);
-purchaseButton2.addEventListener("click", updatePurchaseButton2);
+const availableItems: Item[] = [
+  {
+    name: "Open a bank Account",
+    img: "🏦",
+    description: "You have saved some money, let's get some interest!",
+    initPrice: 10,
+    rate: 0.1,
+    count: 0,
+  },
+  {
+    name: "Upgrade to a Gold Account",
+    img: "⭐",
+    description: "A higher level account for more interest!",
+    initPrice: 100,
+    rate: 5,
+    count: 0,
+  },
+  {
+    name: "Find an investment manager to manage your money",
+    img: "📈",
+    description: "Bank interest can no longer satisfy you, let’s invest!",
+    initPrice: 1000,
+    rate: 100,
+    count: 0,
+  },
+];
 
-const item3Price = 1000;
-let button3Count: number = 0;
-const purchaseButton3 = document.createElement("button");
-purchaseButton3.innerHTML = `Find an investment manager to manage your money<br>Account opened: ${button3Count}, Cost: ${item3Price}🪙, Gain: 100🪙/sec<br>Bank interest can no longer satisfy you, let’s invest!`;
-purchaseButton3.disabled = true;
-function updatePurchaseButton3() {
-  let currentPrice = countCurrentPrice(button3Count, item3Price);
-  if (counter >= currentPrice) {
-    counter -= currentPrice;
-    growthRate += 100;
-    button3Count += 1;
+const purchaseButtons: HTMLButtonElement[] = [];
+availableItems.forEach((item) => {
+  const purchaseButton = document.createElement("button");
+  function updateButton() {
+    const currentPrice = countCurrentPrice(item.count, item.initPrice);
     rateTxt.innerHTML = `Growth rate: ${growthRate.toFixed(2)} 🪙/sec`;
+    purchaseButton.innerHTML = `
+      ${item.name}
+      <br>Account opened: ${item.count}, Cost: ${currentPrice.toFixed(
+        2,
+      )}🪙, Gain: ${item.rate}🪙/sec
+      <br>${item.description}
+    `;
   }
-  currentPrice = countCurrentPrice(button3Count, item3Price);
-  purchaseButton3.innerHTML = `Find an investment manager to manage your money<br>Account opened: ${button3Count}, Cost: ${currentPrice.toFixed(
-    2,
-  )}🪙, Gain: 100🪙/sec<br>Bank interest can no longer satisfy you, let’s invest!`;
-}
-app.append(purchaseButton3);
-purchaseButton3.addEventListener("click", updatePurchaseButton3);
+  purchaseButtons.push(purchaseButton);
+  purchaseButton.addEventListener("click", () => {
+    const currentPrice = countCurrentPrice(item.count, item.initPrice);
+    if (counter >= currentPrice) {
+      counter -= currentPrice;
+      growthRate += item.rate;
+      item.count += 1;
+      updateButton();
+      updatePurchaseButtonState();
+    }
+  });
+  app.append(purchaseButton);
+  updateButton();
+});
+
+// const item1Price = 10;
+// let button1Count: number = 0;
+// const purchaseButton = document.createElement("button");
+// purchaseButton.innerHTML = `Open a bank Account<br>Account opened: ${button1Count}, Cost: ${item1Price}🪙, Gain: 0.1🪙/sec<br>You have saved some money, let's get some interest!`;
+// purchaseButton.disabled = true;
+// function updatePurchaseButton() {
+//   let currentPrice = countCurrentPrice(button1Count, item1Price);
+//   if (counter >= currentPrice) {
+//     counter -= currentPrice;
+//     growthRate += 0.1;
+//     button1Count += 1;
+//     rateTxt.innerHTML = `Growth rate: ${growthRate.toFixed(2)} 🪙/sec`;
+//   }
+//   currentPrice = countCurrentPrice(button1Count, item1Price);
+//   purchaseButton.innerHTML = `Open a bank Account<br>Account opened: ${button1Count}, Cost: ${currentPrice.toFixed(
+//     2,
+//   )}🪙, Gain: 0.1🪙/sec<br>You have saved some money, let's get some interest!`;
+// }
+// app.append(purchaseButton);
+// purchaseButton.addEventListener("click", updatePurchaseButton);
+
+// const item2Price = 100;
+// let button2Count: number = 0;
+// const purchaseButton2 = document.createElement("button");
+// purchaseButton2.innerHTML = `Upgrade to a "Gold Account"<br>Account opened: ${button2Count}, Cost: ${item2Price}🪙, Gain: 5🪙/sec<br>A higher level account for more interest!`;
+// purchaseButton2.disabled = true;
+// function updatePurchaseButton2() {
+//   let currentPrice = countCurrentPrice(button2Count, item2Price);
+//   if (counter >= currentPrice) {
+//     counter -= currentPrice;
+//     growthRate += 5;
+//     button2Count += 1;
+//     rateTxt.innerHTML = `Growth rate: ${growthRate.toFixed(2)} 🪙/sec`;
+//   }
+//   currentPrice = countCurrentPrice(button2Count, item2Price);
+//   purchaseButton2.innerHTML = `Upgrade to a "Gold Account"<br>Account opened: ${button2Count}, Cost: ${currentPrice.toFixed(
+//     2,
+//   )}🪙, Gain: 5🪙/sec<br>A higher level account for more interest!`;
+// }
+// app.append(purchaseButton2);
+// purchaseButton2.addEventListener("click", updatePurchaseButton2);
+
+// const item3Price = 1000;
+// let button3Count: number = 0;
+// const purchaseButton3 = document.createElement("button");
+// purchaseButton3.innerHTML = `Find an investment manager to manage your money<br>Account opened: ${button3Count}, Cost: ${item3Price}🪙, Gain: 100🪙/sec<br>Bank interest can no longer satisfy you, let’s invest!`;
+// purchaseButton3.disabled = true;
+// function updatePurchaseButton3() {
+//   let currentPrice = countCurrentPrice(button3Count, item3Price);
+//   if (counter >= currentPrice) {
+//     counter -= currentPrice;
+//     growthRate += 100;
+//     button3Count += 1;
+//     rateTxt.innerHTML = `Growth rate: ${growthRate.toFixed(2)} 🪙/sec`;
+//   }
+//   currentPrice = countCurrentPrice(button3Count, item3Price);
+//   purchaseButton3.innerHTML = `Find an investment manager to manage your money<br>Account opened: ${button3Count}, Cost: ${currentPrice.toFixed(
+//     2,
+//   )}🪙, Gain: 100🪙/sec<br>Bank interest can no longer satisfy you, let’s invest!`;
+// }
+// app.append(purchaseButton3);
+// purchaseButton3.addEventListener("click", updatePurchaseButton3);
