@@ -22,7 +22,7 @@ button.style.fontSize = "50px";
 app.append(button);
 
 //Step 2
-let counter: number = 10000000;
+let counter: number = 0;
 const countText = document.createElement("h2");
 countText.innerHTML = `Money saved so far: ${counter} 🪙`;
 app.append(countText);
