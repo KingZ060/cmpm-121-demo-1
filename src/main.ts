@@ -22,7 +22,7 @@ button.style.fontSize = "50px";
 app.append(button);
 
 //Step 2
-let counter: number = 2900;
+let counter: number = 10000000;
 const countText = document.createElement("h2");
 countText.innerHTML = `Money saved so far: ${counter} 🪙`;
 app.append(countText);
@@ -151,10 +151,28 @@ const availableItems: Item[] = [
   },
   {
     name: "Find an investment manager to manage your money",
-    img: "📈",
+    img: "🏛️",
     description: "Bank interest can no longer satisfy you, let’s invest!",
     initPrice: 1000,
     rate: 100,
+    count: 0,
+  },
+  {
+    name: "Open a public company",
+    img: "🏢",
+    description:
+      "You get enough money and you turn your attention to starting a company.",
+    initPrice: 10000,
+    rate: 1500,
+    count: 0,
+  },
+  {
+    name: "The position of the world's richest man",
+    img: "🤑🤑🤑",
+    description:
+      "Your money makes you the richest man in the world, and you don't have to do anything anymore.",
+    initPrice: 10000000,
+    rate: 99999999,
     count: 0,
   },
 ];
