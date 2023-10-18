@@ -23,14 +23,15 @@ app.append(button);
 
 //Step 2
 let counter: number = 0;
-const countText = document.createElement("h3");
+const countText = document.createElement("h2");
 countText.innerHTML = `Money saved so far: ${counter} 🪙`;
 app.append(countText);
 button.addEventListener("click", () => setCounter(counter + 1));
 
 function setCounter(count: number) {
   counter = count;
-  countText.innerHTML = `Money saved so far: ${counter} 🪙`;
+  updatePurchaseButtonState();
+  countText.innerHTML = `Money saved so far: ${counter.toFixed(2)} 🪙`;
 }
 
 //Step 3
@@ -45,12 +46,35 @@ if (!nIntervId) {
 //Step 4
 clearTimeout(nIntervId);
 let lastTimeStamp: number;
+let growthRate: number = 0;
 function updateCounter(timestamp: number) {
   if (lastTimeStamp != null) {
     const deltaTime = (timestamp - lastTimeStamp) / 1000;
-    setCounter(counter + deltaTime);
+    setCounter(counter + growthRate * deltaTime);
   }
   lastTimeStamp = timestamp;
   requestAnimationFrame(updateCounter);
 }
 requestAnimationFrame(updateCounter);
+
+//Step 5
+const rateTxt = document.createElement("h2");
+rateTxt.innerHTML = `Growth rate: ${growthRate.toFixed(2)} 🪙/sec`;
+app.append(rateTxt);
+
+const purchaseButton = document.createElement("button");
+purchaseButton.innerHTML = `Upgrade item<br>Cost 10 units, gain 1 growth rate`;
+purchaseButton.disabled = true;
+
+function updatePurchaseButtonState() {
+  purchaseButton.disabled = counter < 10;
+}
+function updatepurchaseButton() {
+  if (counter >= 10) {
+    counter -= 10;
+    growthRate += 1;
+    rateTxt.innerHTML = `Growth rate: ${growthRate.toFixed(2)} 🪙/sec`;
+  }
+}
+app.append(purchaseButton);
+purchaseButton.addEventListener("click", updatepurchaseButton);
