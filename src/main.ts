@@ -41,3 +41,16 @@ if (!nIntervId) {
     setCounter(counter + 1);
   }, autoClickTime);
 }
+
+//Step 4
+clearTimeout(nIntervId);
+let lastTimeStamp: number;
+function updateCounter(timestamp: number) {
+  if (lastTimeStamp != null) {
+    const deltaTime = (timestamp - lastTimeStamp) / 1000;
+    setCounter(counter + deltaTime);
+  }
+  lastTimeStamp = timestamp;
+  requestAnimationFrame(updateCounter);
+}
+requestAnimationFrame(updateCounter);
