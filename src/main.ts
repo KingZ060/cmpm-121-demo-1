@@ -32,3 +32,12 @@ function setCounter(count: number) {
   counter = count;
   countText.innerHTML = `Money saved so far: ${counter} 🪙`;
 }
+
+//Step 3
+const autoClickTime = 1000;
+let nIntervId;
+if (!nIntervId) {
+  nIntervId = setInterval(() => {
+    setCounter(counter + 1);
+  }, autoClickTime);
+}
