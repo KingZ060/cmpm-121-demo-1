@@ -22,7 +22,7 @@ button.style.fontSize = "50px";
 app.append(button);
 
 //Step 2
-let counter: number = 2999;
+let counter: number = 2900;
 const countText = document.createElement("h2");
 countText.innerHTML = `Money saved so far: ${counter} 🪙`;
 app.append(countText);
@@ -124,10 +124,10 @@ function countCurrentPrice(count: number, price: number): number {
   return price * Math.pow(1.15, count);
 }
 
-let item1Price = 10;
+const item1Price = 10;
 let button1Count: number = 0;
 const purchaseButton = document.createElement("button");
-purchaseButton.innerHTML = `Upgrade item<br>Item bought: ${button1Count}<br>Cost 10 units, gain 0.1 growth rate`;
+purchaseButton.innerHTML = `Open a bank Account<br>Account opened: ${button1Count}, Cost: ${item1Price}🪙, Gain: 0.1🪙/sec<br>You have saved some money, let's get some interest!`;
 purchaseButton.disabled = true;
 function updatePurchaseButton() {
   let currentPrice = countCurrentPrice(button1Count, item1Price);
@@ -138,52 +138,51 @@ function updatePurchaseButton() {
     rateTxt.innerHTML = `Growth rate: ${growthRate.toFixed(2)} 🪙/sec`;
   }
   currentPrice = countCurrentPrice(button1Count, item1Price);
-  purchaseButton.innerHTML = `Upgrade item<br>Item bought: ${button1Count}<br>Cost ${currentPrice.toFixed(
+  purchaseButton.innerHTML = `Open a bank Account<br>Account opened: ${button1Count}, Cost: ${currentPrice.toFixed(
     2,
-  )} units, gain 0.1 growth rate`;
+  )}🪙, Gain: 0.1🪙/sec<br>You have saved some money, let's get some interest!`;
 }
 app.append(purchaseButton);
 purchaseButton.addEventListener("click", updatePurchaseButton);
 
-let item2Price = 100;
+const item2Price = 100;
 let button2Count: number = 0;
 const purchaseButton2 = document.createElement("button");
-purchaseButton2.innerHTML = `Upgrade item<br>Item bought: ${button2Count}<br>Cost 100 units, gain 2 growth rate`;
+purchaseButton2.innerHTML = `Upgrade to a "Gold Account"<br>Account opened: ${button2Count}, Cost: ${item2Price}🪙, Gain: 5🪙/sec<br>A higher level account for more interest!`;
 purchaseButton2.disabled = true;
 function updatePurchaseButton2() {
   let currentPrice = countCurrentPrice(button2Count, item2Price);
   if (counter >= currentPrice) {
     counter -= currentPrice;
-    growthRate += 2;
+    growthRate += 5;
     button2Count += 1;
     rateTxt.innerHTML = `Growth rate: ${growthRate.toFixed(2)} 🪙/sec`;
   }
   currentPrice = countCurrentPrice(button2Count, item2Price);
-  purchaseButton2.innerHTML = `Upgrade item<br>Item bought: ${button2Count}<br>Cost ${currentPrice.toFixed(
+  purchaseButton2.innerHTML = `Upgrade to a "Gold Account"<br>Account opened: ${button2Count}, Cost: ${currentPrice.toFixed(
     2,
-  )} units, gain 2 growth rate`;
+  )}🪙, Gain: 5🪙/sec<br>A higher level account for more interest!`;
 }
 app.append(purchaseButton2);
 purchaseButton2.addEventListener("click", updatePurchaseButton2);
 
-let item3Price = 1000;
+const item3Price = 1000;
 let button3Count: number = 0;
 const purchaseButton3 = document.createElement("button");
-purchaseButton3.innerHTML = `Upgrade item<br>Item bought: ${button3Count}<br>Cost 1000 units, gain 50 growth rate`;
+purchaseButton3.innerHTML = `Find an investment manager to manage your money<br>Account opened: ${button3Count}, Cost: ${item3Price}🪙, Gain: 100🪙/sec<br>Bank interest can no longer satisfy you, let’s invest!`;
 purchaseButton3.disabled = true;
 function updatePurchaseButton3() {
   let currentPrice = countCurrentPrice(button3Count, item3Price);
-  console.log(currentPrice);
   if (counter >= currentPrice) {
     counter -= currentPrice;
-    growthRate += 50;
+    growthRate += 100;
     button3Count += 1;
     rateTxt.innerHTML = `Growth rate: ${growthRate.toFixed(2)} 🪙/sec`;
   }
   currentPrice = countCurrentPrice(button3Count, item3Price);
-  purchaseButton3.innerHTML = `Upgrade item<br>Item bought: ${button3Count}<br>Cost ${currentPrice.toFixed(
+  purchaseButton3.innerHTML = `Find an investment manager to manage your money<br>Account opened: ${button3Count}, Cost: ${currentPrice.toFixed(
     2,
-  )} units, gain 50 growth rate`;
+  )}🪙, Gain: 100🪙/sec<br>Bank interest can no longer satisfy you, let’s invest!`;
 }
 app.append(purchaseButton3);
 purchaseButton3.addEventListener("click", updatePurchaseButton3);
